@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'lightning-source/version'
+require 'lightning-source'
 
 Gem::Specification.new do |spec|
   spec.name          = "lightning-source"
-  spec.version       = Lightning::Source::VERSION
+  spec.version       = LightningSource::VERSION
   spec.authors       = ["Simon Cozens"]
   spec.email         = ["simon@simon-cozens.org"]
   spec.description   = "Scrape the LSI publisher's web site"
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.summary       = "Provide book sales data, make orders etc. for Lightning Source publishers"
   spec.homepage      = ""
   spec.license       = "MIT"
 

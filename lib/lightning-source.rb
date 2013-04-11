@@ -29,8 +29,8 @@ class LightningSource
   	currency = market == 0 ? 2 : 0
   	page = @agent.get("https://www.lightningsource.com/LSISecure/FinancialReports/PubCompReportCriteria.aspx")
   	f = page.form
-  		f.field_with(:name => "_ctl0:MainContent:PeriodEntry:txtDate1").value = options[:first]
-  		f.field_with(:name => "_ctl0:MainContent:PeriodEntry:txtDate2").value = options[:last]
+  		f.field_with(:name => "_ctl0:MainContent:PeriodEntry:txtDate1").value = options[:first].strftime("%d-%b-%y")
+  		f.field_with(:name => "_ctl0:MainContent:PeriodEntry:txtDate2").value = options[:last].strftime("%d-%b-%y")
   		f.checkbox_with(:name => "_ctl0:MainContent:optOrgID:"+market.to_s).check
   		f.checkbox_with(:name => "_ctl0:MainContent:optCurrency:"+currency.to_s).check
   		f.checkbox_with(:name => "_ctl0:MainContent:optCompensationType:0").check
@@ -40,9 +40,20 @@ class LightningSource
   	table.shift
   	headers = table.shift
   	# Convert to an array of hashes
-  	return table.map {|row|
-  		Hash[*headers.map{|x|x.gsub(/\s+/,"").to_sym}.zip(row).flatten]
-  	}
+  	table.map {|row|
+  		h = Hash[*headers.map{|x|x.gsub(/\s+/,"").to_sym}.zip(row).flatten]
+      nh = {}
+      h.each do |k,v|
+        if k == :ISBN or k == :Title or k == :Author
+          nh[k] = v
+        elsif k == :Disc
+          nh[k] = v.to_f/100
+        else
+          nh[k] = v.to_f
+        end
+      end
+      nh
+    }
   end
 
   private
