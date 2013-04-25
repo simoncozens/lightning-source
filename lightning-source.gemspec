@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = LightningSource::VERSION
   spec.authors       = ["Simon Cozens"]
   spec.email         = ["simon@simon-cozens.org"]
-  spec.description   = "Scrape the LSI publisher's web site"
+  spec.description   = "Ruby interface to the Lightning Source on-demand publishers' web site"
   spec.summary       = "Provide book sales data, make orders etc. for Lightning Source publishers"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/simoncozens/lightning-source"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
