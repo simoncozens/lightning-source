@@ -5,7 +5,7 @@ class LightningSource
 
 	exceptions.each { |e| const_set(e+"Error", Class.new(StandardError)) }  
 
-	VERSION = "1.0"
+	VERSION = "1.1"
 	attr_accessor :agent
 
   def initialize(login, password)
@@ -29,11 +29,11 @@ class LightningSource
   	currency = market == 0 ? 2 : 0
   	page = @agent.get("https://www.lightningsource.com/LSISecure/FinancialReports/PubCompReportCriteria.aspx")
   	f = page.form
-  		f.field_with(:name => "_ctl0:MainContent:PeriodEntry:txtDate1").value = options[:first].strftime("%d-%b-%y")
-  		f.field_with(:name => "_ctl0:MainContent:PeriodEntry:txtDate2").value = options[:last].strftime("%d-%b-%y")
-  		f.checkbox_with(:name => "_ctl0:MainContent:optOrgID:"+market.to_s).check
-  		f.checkbox_with(:name => "_ctl0:MainContent:optCurrency:"+currency.to_s).check
-  		f.checkbox_with(:name => "_ctl0:MainContent:optCompensationType:0").check
+  		f.field_with(:name => "_ctl0:_ctl0:MainContent:PeriodEntry:txtDate1").value = options[:first].strftime("%d-%b-%y")
+  		f.field_with(:name => "_ctl0:_ctl0:MainContent:PeriodEntry:txtDate2").value = options[:last].strftime("%d-%b-%y")
+  		f.checkbox_with(:name => "_ctl0:_ctl0:MainContent:optOrgID:"+market.to_s).check
+  		f.checkbox_with(:name => "_ctl0:_ctl0:MainContent:optCurrency:"+currency.to_s).check
+  		f.checkbox_with(:name => "_ctl0:_ctl0:MainContent:optCompensationType:0").check
   	report = agent.submit(f, f.buttons.first)
   	# Do some checks here
   	table = reformat_table(report)
