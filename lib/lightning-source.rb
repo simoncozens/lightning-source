@@ -29,11 +29,11 @@ class LightningSource
   	currency = market == 0 ? 2 : 0
   	page = @agent.get("https://www.lightningsource.com/LSISecure/FinancialReports/PubCompReportCriteria.aspx")
   	f = page.form
-  		f.field_with(:name => "_ctl0:_ctl0:MainContent:PeriodEntry:txtDate1").value = options[:first].strftime("%d-%b-%y")
-  		f.field_with(:name => "_ctl0:_ctl0:MainContent:PeriodEntry:txtDate2").value = options[:last].strftime("%d-%b-%y")
-  		f.checkbox_with(:name => "_ctl0:_ctl0:MainContent:optOrgID:"+market.to_s).check
-  		f.checkbox_with(:name => "_ctl0:_ctl0:MainContent:optCurrency:"+currency.to_s).check
-  		f.checkbox_with(:name => "_ctl0:_ctl0:MainContent:optCompensationType:0").check
+  		f.field_with(:name => /txtDate1/).value = options[:first].strftime("%d-%b-%y")
+  		f.field_with(:name => /txtDate2/).value = options[:last].strftime("%d-%b-%y")
+  		f.checkbox_with(:name => Regexp.new("optOrgID:"+market.to_s)).check
+  		f.checkbox_with(:name => Regexp.new("optCurrency:"+currency.to_s)).check
+  		f.checkbox_with(:name => /optCompensationType:0/).check
   	report = agent.submit(f, f.buttons.first)
   	# Do some checks here
   	table = reformat_table(report)
