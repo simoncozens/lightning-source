@@ -5,7 +5,7 @@ class LightningSource
 
 	exceptions.each { |e| const_set(e+"Error", Class.new(StandardError)) }  
 
-	VERSION = "1.1"
+	VERSION = "1.2"
 	attr_accessor :agent
 
   def initialize(login, password)
@@ -25,14 +25,19 @@ class LightningSource
   end
 
   def compensation(options = {})
-  	market = options[:market] == "UK" ? 1 : 0
-  	currency = market == 0 ? 2 : 0
+    markets = { "US" => { :ou => 0, :currency => 3 },
+                "UK" => { :ou => 1, :currency => 1 },
+                "AU" => { :ou => 2, :currency => 0 } }
+    if (!markets.has_key?(options[:market]))
+        throw "Unknown market "+options[:market]+" (:market should be "+markets.keys.join("/")+")"
+    end
+  	market = markets[options[:market]]
   	page = @agent.get("https://www.lightningsource.com/LSISecure/FinancialReports/PubCompReportCriteria.aspx")
   	f = page.form
   		f.field_with(:name => /txtDate1/).value = options[:first].strftime("%d-%b-%y")
   		f.field_with(:name => /txtDate2/).value = options[:last].strftime("%d-%b-%y")
-  		f.checkbox_with(:name => Regexp.new("optOrgID:"+market.to_s)).check
-  		f.checkbox_with(:name => Regexp.new("optCurrency:"+currency.to_s)).check
+  		f.checkbox_with(:name => Regexp.new("optOrgID:"+market[:ou].to_s)).check
+  		f.checkbox_with(:name => Regexp.new("optCurrency:"+market[:currency].to_s)).check
   		f.checkbox_with(:name => /optCompensationType:0/).check
   	report = agent.submit(f, f.buttons.first)
   	# Do some checks here
